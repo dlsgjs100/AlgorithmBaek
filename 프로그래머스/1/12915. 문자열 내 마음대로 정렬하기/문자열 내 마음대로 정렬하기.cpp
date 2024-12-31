@@ -1,14 +1,18 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-
 using namespace std;
 
+int i;
+
+bool compare (string a, string b) {
+    return a[i] == b[i] ? a < b : a[i] < b[i];
+}
+
 vector<string> solution(vector<string> strings, int n) {
-    sort(strings.begin(), strings.end(), [n](const string &a, const string &b) {
-        if (a[n] != b[n]) 
-            return a[n] < b[n];
-        return a < b;
-    });
-    return strings;
+    vector<string> answer;
+    i = n;
+    sort(strings.begin(),strings.end(), compare);
+    answer = strings;
+    return answer;
 }
