@@ -1,30 +1,32 @@
 #include <iostream>
 #include <vector>
-#include <algorithm> 
+#include <algorithm>
 
 using namespace std;
 
-int dx[4] = { 0,0,-1,1 };
-int dy[4] = { -1,1,0,0 };
+// 상하좌우 탐색을 위한 배열
+const int dx[4] = { 0,0,-1,1 };
+const int dy[4] = { -1,1,0,0 };
 
-int dfs(vector<vector<int>>& maps, vector<vector<bool>>& visited, int x, int y, int N)
+// 전역변수 선언으로 인자 최소화
+int N;
+vector<vector<int>> maps;
+vector<int> answer;
+
+int dfs(int x, int y)
 {
-    visited[x][y] = true;
-    int houseCount = 1; // 현재 집 1개 세고 시작
+    // 현재 집 1개 세고 시작
+    int houseCount = 1;
+    maps[x][y] = 0; // 방문 표시
 
     for (int dir = 0; dir < 4; dir++)
     {
         int nx = x + dx[dir];
         int ny = y + dy[dir];
-
-        // 범위 체크
-        if (nx >= 0 && nx < N && ny >= 0 && ny < N)
+        // 범위 안에 있고 방문하지 않은 집이면 dfs 탐색
+        if (nx >= 0 && nx < N && ny >= 0 && ny < N && maps[nx][ny] == 1)
         {
-			// 방문하지 않았고 집이 있는 곳이면 dfs 탐색
-            if (maps[nx][ny] == 1 && visited[nx][ny] == false)
-            {
-                houseCount += dfs(maps, visited, nx, ny, N);
-            }
+            houseCount += dfs(nx, ny);
         }
     }
     return houseCount;
@@ -32,12 +34,8 @@ int dfs(vector<vector<int>>& maps, vector<vector<bool>>& visited, int x, int y, 
 
 int main()
 {
-    int N; // 5~25
     cin >> N;
-
-    vector<vector<int>> maps(N, vector<int>(N));
-    vector<vector<bool>> visited(N, vector<bool>(N, false));
-
+    maps.resize(N, vector<int>(N));
     // N줄에 각각 N개의 자료
     for (int i = 0; i < N; i++)
     {
@@ -48,27 +46,26 @@ int main()
             maps[i][j] = line[j] - '0';
         }
     }
-
-    vector<int> ans;
     // 단지 수 세기
     for (int i = 0; i < N; i++)
     {
         for (int j = 0; j < N; j++)
         {
-			// 방문하지 않았고 집이 있는 곳이면 dfs 탐색
-            if (maps[i][j] == 1 && !visited[i][j])
+            // 방문하지 않은 집이면 dfs 탐색
+            if (maps[i][j] == 1)
             {
-                int houseCount = dfs(maps, visited, i, j, N);
-                ans.push_back(houseCount);
+                answer.push_back(dfs(i, j));
             }
         }
     }
-
-    sort(ans.begin(), ans.end());
-
-    cout << ans.size() << "\n"; // 총 단지 수
-    for (int num : ans)
+    // 오름차순 정렬
+    sort(answer.begin(), answer.end());
+    // 총 단지 수
+    cout << answer.size() << "\n";
+    for (int c : answer)
     {
-        cout << num << "\n"; // 각 단지 내 집 수
+        // 각 단지 내 집 수
+        cout << c << "\n";
     }
+    return 0;
 }
