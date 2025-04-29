@@ -1,25 +1,17 @@
-#include <string>
 #include <vector>
-
 using namespace std;
 
-void findTargetNumber(const vector<int>& numbers,const int& target, int sum, int index, int& answer)
-{
-    if(index == numbers.size())
-    {
-        if(sum == target)
-        {
-            answer++;
-        }
+void dfs(const vector<int>& numbers, int index, int target, int& answer) {
+    if (index == numbers.size()) {
+        if (target == 0) answer++;
         return;
     }
-    
-    findTargetNumber(numbers, target, sum+numbers[index],index+1,answer);
-    findTargetNumber(numbers, target, sum-numbers[index],index+1,answer);
+    dfs(numbers, index + 1, target - numbers[index], answer);
+    dfs(numbers, index + 1, target + numbers[index], answer);
 }
 
 int solution(vector<int> numbers, int target) {
     int answer = 0;
-    findTargetNumber(numbers, target, 0,0,answer);
+    dfs(numbers, 0, target, answer);
     return answer;
 }
