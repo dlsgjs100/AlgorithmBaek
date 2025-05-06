@@ -2,24 +2,13 @@
 
 using namespace std;
 
-int roomNumber(const int& H, const int& W, const int& N)
+int getRoomNumber(int H, int N)
 {
-    int room;
-    // 6,12,10
-    // 1 = 6*0 + 1 -> 101
-    // 6 = 6*1 + 0 -> 601
-    // 7 = 6*1 + 1 -> 102
-    // 10 = 6 * 1 + 4 -> 402
-    int quotient = N / H;
-    int remainder = N % H;
-	if (remainder == 0)
-	{
-		remainder = H;
-		quotient--;
-	}
-    room = remainder * 100 + quotient + 1;
-    return room;
+    int floor = (N - 1) % H + 1;       // 층수: 1~H
+    int room = (N - 1) / H + 1;        // 호수: 1~
+    return floor * 100 + room;
 }
+
 int main()
 {
     ios::sync_with_stdio(false);
@@ -30,9 +19,10 @@ int main()
 
     while (T--)
     {
-        int H, W, N; // 1 ~ 99 / 1 ~ 99 / 1 ~ 9801
+        int H, W, N;
         cin >> H >> W >> N;
-        cout << roomNumber(H, W, N) << '\n';
+        cout << getRoomNumber(H, N) << '\n'; // W는 입력만 받고 무시
     }
+
     return 0;
 }
